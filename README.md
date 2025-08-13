@@ -1,70 +1,88 @@
-# Getting Started with Create React App
+# Reusable Toast Notification System (React)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A lightweight, accessible toast system built with React + TypeScript that supports stacking, auto-dismiss, manual dismissal, theming, and smooth animations. This README maps directly to the assessment requirements and explains how to run, test, and evaluate the project—without code snippets.
 
-## Available Scripts
+## Overview & Design Rationale
 
-In the project directory, you can run:
+### Goals
+- One small provider and a hook for a tiny, ergonomic API.  
+- Strong accessibility defaults (screen-reader friendly, keyboard-operable).  
+- Theming via CSS variables; easy to brand and reposition.  
+- Smooth, jank-free animations with no layout shifts.  
+- Testable core (pure reducer) and behavior-level tests.
 
-### `npm start`
+### Key Decisions
+- **Context + Portal**: A single `ToastProvider` exposes an API; the visual stack is rendered in a portal attached to the document body to avoid layout/overflow issues.  
+- **Reducer-driven State**: A pure reducer handles **ADD**, **DISMISS**, **REMOVE**, enabling deterministic unit tests and predictable updates.  
+- **Styling with CSS Variables**: Default theme lives in a dedicated stylesheet; apps override tokens to rebrand without touching components.  
+- **Performance First**: Fixed viewport, minimal re-renders, short transitions, and reduced-motion support.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## What’s Included (mapped to tasks)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Core Functionality
+- Global provider with a simple API to create and dismiss toasts.  
+- Stacking with a configurable maximum; oldest items trimmed automatically.  
+- Auto-dismiss with per-toast or global duration; manual close always available.
 
-### `npm test`
+### Theming & Customization
+- Theme tokens (colors, radius, shadow) via CSS variables.  
+- Configurable position (e.g., bottom-right, top-center).  
+- Optional icon and action button per toast.  
+- Global defaults overridable via provider configuration.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Animation & Performance
+- CSS transitions for enter/exit (≤ 200ms by default).  
+- No content shift: fixed viewport avoids CLS.  
+- Scoped updates so only affected toasts re-render.
 
-### `npm run build`
+### Accessibility
+- Live region container; assertive announcements for errors.  
+- Focusable toasts; Escape to dismiss; labeled close button.  
+- Honors reduced-motion user preference.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Testing & QA
+- Unit tests for the reducer (add/trim, dismiss, remove).  
+- Behavior tests for stacking, timers, hover-pause, click/Escape dismissal, actions, and a11y attributes.  
+- Coverage command included.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Setup Instructions
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Prerequisites
+- Node.js and npm installed.
 
-### `npm run eject`
+### Install
+- From the project root, install dependencies using your package manager (e.g., `npm install`).
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Run (development)
+- Start the dev server (e.g., `npm start`) and open the local URL shown in your terminal.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Build (production)
+- Create an optimized build (e.g., `npm run build`). Output will be in the **build** folder, suitable for static hosting.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Usage (how to integrate)
+- Wrap your application with the toast provider at the root.  
+- Consume the toast API via the hook anywhere in your component tree.  
+- Trigger success, error, warning, or info notifications; optionally provide an action button, custom duration, and callbacks.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Theming & Customization
+- Theme tokens live in the toast stylesheet (e.g., `src/styles/index.css`). Override variables (colors, radius, shadow) at the app level to rebrand.  
+- Position is set through the provider configuration (e.g., bottom-right, top-center).  
+- Behavior overrides include default duration, max stack size, pause on hover, and click-to-close.  
+- Per-toast options allow icon, action button label/handler, and duration override (including “infinite”).
 
-## Learn More
+## Project Structure (high-level)
+- `core/` — types, reducer, defaults  
+- `provider/` — provider, context, portal  
+- `components/` — viewport/list item components  
+- `styles/` — toast stylesheet and theme tokens  
+- `tests/` — reducer, behavior, and a11y/config specs  
+- Demo app files (entry, app styles) for local development
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Testing Instructions
+- Run tests in watch mode (e.g., `npm test`).  
+- Generate coverage (e.g., `npm run coverage`) and inspect the output for lines/branches/functions.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+**Tests cover:**
+- Reducer: add/trim, dismiss, remove  
+- Behavior: trigger variants, stacking, timers, pause on hover, close button, Escape, click-to-close (if enabled), action callback, `onDismiss`  
+- A11y/config: live region attributes and position classes
